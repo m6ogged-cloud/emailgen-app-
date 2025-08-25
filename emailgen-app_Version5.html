@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EmailGen App</title>
+  <style>
+    body { margin:0; font-family:sans-serif; background:#f6f7fb; }
+    nav { background:#0056b3; color:#fff; display:flex; justify-content:center; align-items:center; padding:0; }
+    nav a { color:#fff; text-decoration:none; padding:18px 24px; display:inline-block; font-weight:500; transition:background .2s; }
+    nav a:hover, nav a.active { background:#003d80; }
+    .container { max-width:560px; margin:32px auto; background:#fff; box-shadow:0 2px 10px #0001; border-radius:8px; padding:32px 22px 22px 22px; }
+    h1 { margin-top:0; color:#0056b3; }
+    .styled-box { background:#f3f7fa; border:1px solid #bcdffa; border-radius:6px; padding:20px; margin:16px 0; word-break:break-all; }
+    .copy-btn { background:#0056b3; color:#fff; border:none; border-radius:4px; padding:6px 12px; cursor:pointer; margin-left:6px; font-size:0.97em; }
+    .faq-item { border-bottom:1px solid #eee; margin-bottom:12px; }
+    .faq-question { cursor:pointer; font-weight:600; padding:10px 0; color:#0056b3; display:flex; align-items:center; }
+    .faq-answer { display:none; padding:0 0 12px 0; color:#333; }
+    .faq-question::after { content:"▶"; margin-left:auto; font-size:0.9em; transition:transform .2s; }
+    .faq-question.expanded::after { transform:rotate(90deg); }
+    form { display:flex; flex-direction:column; gap:12px; }
+    input, textarea { padding:8px; border-radius:4px; border:1px solid #bcdffa; font-size:1em; }
+    textarea { resize:vertical; min-height:80px; }
+    button[type=submit] { background:#0056b3; color:#fff; border:none; border-radius:4px; padding:10px 0; font-size:1.01em; cursor:pointer; }
+    .features { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:22px 0; }
+    .feature-card { background:#eef5ff; border:1px solid #d1e7ff; border-radius:7px; padding:18px 10px; font-size:1.04em; box-shadow:0 1px 4px #0001; text-align:center; display:flex; flex-direction:column; align-items:center; }
+    .feature-icon { font-size:2em; margin-bottom:6px; }
+    .stats { margin:18px 0 0 0; background:#f3faf7; border:1px solid #b9f5d2; border-radius:7px; padding:14px; color:#18794e; font-size:1.04em; display:flex; gap:18px; align-items:center; justify-content:space-between; }
+    .stat-label { font-weight:600; }
+    @media (max-width:700px) {
+      .container { margin:18px 8px; padding:18px 8px; }
+      nav a { padding:10px 12px; font-size:0.97em; }
+      .features { grid-template-columns:1fr; gap:12px; }
+    }
+    .fade-in { animation:fadeIn .8s; }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#home" id="nav-home" class="active">Home</a>
+    <a href="#generate" id="nav-generate">Generate Email</a>
+    <a href="#faq" id="nav-faq">FAQ</a>
+    <a href="#privacy" id="nav-privacy">Privacy Policy</a>
+    <a href="#help" id="nav-help">Help</a>
+  </nav>
+  <div class="container fade-in">
+    <!-- Home Page -->
+    <section id="page-home">
+      <h1>EmailGen App</h1>
+      <p>
+        Welcome to <strong>EmailGen App</strong>! Instantly generate secure, disposable email addresses and strong passwords for your privacy and testing needs.<br>
+        <span style="color:#0056b3; font-weight:600;">Fast. Simple. Safe.</span>
+      </p>
+      <div class="features">
+        <div class="feature-card">
+          <span class="feature-icon">🔒</span>
+          <span>Secure email addresses & passwords</span>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">⚡</span>
+          <span>Instant one-click generation</span>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📋</span>
+          <span>Copy to clipboard support</span>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🧑‍💻</span>
+          <span>Perfect for testing and signups</span>
+        </div>
+      </div>
+      <div class="stats" id="stats-box">
+        <span><span class="stat-label">Emails Generated:</span> <span id="stat-emails">0</span></span>
+        <span><span class="stat-label">Users Online:</span> <span id="stat-users">1</span></span>
+        <span><span class="stat-label">Version:</span> 2.0</span>
+      </div>
+      <hr>
+      <h3>How it works</h3>
+      <ol>
+        <li>Go to <b>Generate Email</b> and click <i>Get New Email</i>.</li>
+        <li>Copy your new email and password for signups or testing.</li>
+        <li>Check out the FAQ for tips or the Help page for support.</li>
+      </ol>
+      <p>
+        <b>Note:</b> No account or login required. Your privacy is our top priority.
+      </p>
+    </section>
+    <!-- Generate Email Page -->
+    <section id="page-generate" style="display:none;">
+      <h1>Generate Email</h1>
+      <button id="new-email-btn" style="margin-bottom:15px;">Get New Email</button>
+      <div id="email-result"></div>
+    </section>
+    <!-- FAQ Page -->
+    <section id="page-faq" style="display:none;">
+      <h1>FAQ</h1>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">Is this email address permanent?</div>
+          <div class="faq-answer">No, generated emails are intended for temporary use, such as testing or signups where you don't want to use your real email.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I use these emails for real signups?</div>
+          <div class="faq-answer">You can use them for testing or try-out purposes, but some services may block disposable domains.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Do you store any generated emails or passwords?</div>
+          <div class="faq-answer">No, we do not store any generated data. Generation is stateless and private.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Is my data safe when I contact support?</div>
+          <div class="faq-answer">Yes, your message will be handled securely and never shared or sold.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I get multiple emails?</div>
+          <div class="faq-answer">Yes! Click "Get New Email" as many times as you need. Each one is unique.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Does EmailGen App work on mobile?</div>
+          <div class="faq-answer">Absolutely! The app is fully responsive and works smoothly on phones and tablets.</div>
+        </div>
+      </div>
+    </section>
+    <!-- Privacy Policy Page -->
+    <section id="page-privacy" style="display:none;">
+      <h1>Privacy Policy</h1>
+      <p>This is a placeholder for the EmailGen App privacy policy. We value your privacy and do not store any generated email or password information. For inquiries, please use the Help page.</p>
+      <ul>
+        <li>We do not store or share generated email addresses or passwords.</li>
+        <li>Messages sent through the Help form are handled securely.</li>
+        <li>No tracking or analytics are used on this app.</li>
+      </ul>
+      <p>
+        For questions, please reach out via the Help page.
+      </p>
+    </section>
+    <!-- Help Page -->
+    <section id="page-help" style="display:none;">
+      <h1>Contact Help</h1>
+      <form id="help-form">
+        <input type="text" name="name" placeholder="Your Name" required maxlength="64">
+        <input type="email" name="email" placeholder="Your Email" required maxlength="128">
+        <textarea name="message" placeholder="Your Message" required maxlength="1000"></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+      <div id="help-status" style="margin-top:10px;"></div>
+    </section>
+  </div>
+  <script>
+    // Page navigation
+    const navs = ['home','generate','faq','privacy','help'];
+    function showPage(page) {
+      navs.forEach(n => {
+        document.getElementById('page-'+n).style.display = n === page ? '' : 'none';
+        document.getElementById('nav-'+n).classList.toggle('active', n === page);
+      });
+      history.replaceState(null, '', '#'+page);
+    }
+    navs.forEach(n => {
+      document.getElementById('nav-'+n).onclick = e => { e.preventDefault(); showPage(n); };
+    });
+    window.addEventListener('hashchange', () => {
+      const hash = location.hash.replace('#','') || 'home';
+      if (navs.includes(hash)) showPage(hash);
+    });
+    showPage((location.hash.replace('#','') || 'home'));
+
+    // Generate Email
+    let emailsGenerated = 0;
+    document.getElementById('new-email-btn').onclick = async function() {
+      const btn = this;
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+      let resultBox = document.getElementById('email-result');
+      resultBox.innerHTML = '';
+      try {
+        const res = await fetch('/api/new-email');
+        if (!res.ok) throw new Error('Failed to generate email');
+        const data = await res.json();
+        emailsGenerated++;
+        updateStats();
+        resultBox.innerHTML = `
+          <div class="styled-box">
+            <b>Email:</b> <span id="gen-email">${data.email}</span><button class="copy-btn" onclick="copyText('gen-email')">Copy</button><br>
+            <b>Password:</b> <span id="gen-password">${data.password}</span><button class="copy-btn" onclick="copyText('gen-password')">Copy</button>
+          </div>
+        `;
+      } catch (err) {
+        resultBox.innerHTML = `<div style="color:red;">${err.message}</div>`;
+      }
+      btn.disabled = false;
+      btn.textContent = 'Get New Email';
+    };
+    window.copyText = function(id) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text);
+      const btn = event.target;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 1200);
+    }
+
+    // FAQ Expand/Collapse
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.onclick = function() {
+        q.classList.toggle('expanded');
+        const ans = q.nextElementSibling;
+        ans.style.display = q.classList.contains('expanded') ? 'block' : 'none';
+      };
+    });
+
+    // Help Form
+    document.getElementById('help-form').onsubmit = async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const statusDiv = document.getElementById('help-status');
+      statusDiv.textContent = '';
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      form.querySelector('button[type=submit]').disabled = true;
+      try {
+        const res = await fetch('/api/help', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Could not send message');
+        statusDiv.style.color = 'green';
+        statusDiv.textContent = 'Your message was sent!';
+        form.reset();
+      } catch (err) {
+        statusDiv.style.color = 'red';
+        statusDiv.textContent = err.message;
+      }
+      form.querySelector('button[type=submit]').disabled = false;
+    };
+
+    // Stats (emails generated & users online - mock)
+    function updateStats() {
+      document.getElementById('stat-emails').textContent = emailsGenerated;
+    }
+    // Simulate online users (random 1-12)
+    function setOnlineUsers() {
+      document.getElementById('stat-users').textContent = Math.floor(Math.random()*11)+1;
+    }
+    setOnlineUsers();
+    setInterval(setOnlineUsers, 12000); // Update every 12s
+
+    updateStats();
+  </script>
+</body>
+</html>
